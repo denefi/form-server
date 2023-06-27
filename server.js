@@ -12,6 +12,7 @@ app.use(express.json());
 // POST route handler
 app.post(
   "/mail",
+  // express-validator schema for form data
   checkSchema(
     {
       senderAddress: {
@@ -45,14 +46,12 @@ app.post(
     ["body"]
   ),
   (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      // Handle validation errors
-      return res.status(400).json({ errors: errors.array() });
+    //Handle validation errors
+    const validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      return res.status(400).json({ errors: validationErrors.array() });
     }
-    const email = process.env.EMAIL;
-    const password = process.env.PASSWORD;
-
+    // Destructure body and check for data protection consent
     const { name, fon, senderAddress, contactMessage, dataProtection } =
       req.body;
     if (!dataProtection) {
@@ -60,11 +59,11 @@ app.post(
         .status(403)
         .json({ error: "Data Protection must be accepted" });
     }
-    if (!email) {
-      return res.status(500).json({ error: "Email address not specified." });
-    }
 
     // Create the transporter with your SMTP settings
+    const email = process.env.EMAIL;
+    const password = process.env.PASSWORD;
+
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
       port: 465,
