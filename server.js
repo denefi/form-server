@@ -14,19 +14,31 @@ app.post(
   "/mail",
   checkSchema(
     {
-      senderAddress: { trim: true, normalizeEmail: true },
-      fon: { trim: true, escape: true },
+      senderAddress: {
+        trim: true,
+        optional: { nullable: true, checkFalsy: true },
+        isEmail: true,
+        normalizeEmail: true,
+      },
+      fon: {
+        trim: true,
+        escape: true,
+        isLength: { options: { max: 20 } },
+        optional: { nullable: true, checkFalsy: true },
+      },
       contactMessage: {
         isString: true,
         trim: true,
         notEmpty: true,
         escape: true,
+        isLength: { options: { max: 400 } },
       },
       name: {
         isString: true,
         trim: true,
         notEmpty: true,
         escape: true,
+        isLength: { options: { max: 100 } },
       },
       dataProtection: { isBoolean: true },
     },
