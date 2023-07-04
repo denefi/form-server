@@ -20,9 +20,9 @@ app.post(
     {
       senderAddress: {
         trim: true,
-        optional: { nullable: true, checkFalsy: true },
         isEmail: true,
         normalizeEmail: true,
+        optional: { nullable: true, checkFalsy: true },
       },
       fon: {
         trim: true,
