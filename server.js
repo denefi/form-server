@@ -1,10 +1,13 @@
 const express = require("express");
 const nodemailer = require("nodemailer");
-require("dotenv").config();
 const { checkSchema, validationResult } = require("express-validator");
+const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 const port = process.env.PORT || 3000; // You can change this port number if needed
+// Enable CORS for all routes
+app.use(cors());
 
 // Middleware to parse JSON bodies
 app.use(express.json());
