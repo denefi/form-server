@@ -52,7 +52,12 @@ app.post(
     //Handle validation errors
     const validationErrors = validationResult(req);
     if (!validationErrors.isEmpty()) {
-      return res.status(400).json({ errors: validationErrors.array() });
+      return res
+        .status(400)
+        .json({
+          errors: validationErrors.array(),
+          message: "There was a validation error",
+        });
     }
     // Destructure body and check for data protection consent
     const { name, fon, senderAddress, contactMessage, dataProtection } =
