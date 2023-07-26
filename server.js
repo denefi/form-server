@@ -19,16 +19,16 @@ app.post(
   checkSchema(
     {
       senderAddress: {
-        optional: { nullable: true, checkFalsy: true },
         trim: true,
         isEmail: true,
         normalizeEmail: true,
+        optional: { nullable: true, checkFalsy: true },
       },
       fon: {
-        optional: { nullable: true, checkFalsy: true },
         trim: true,
         escape: true,
         isLength: { options: { max: 20 } },
+        optional: { nullable: true, checkFalsy: true },
       },
       contactMessage: {
         isString: true,
