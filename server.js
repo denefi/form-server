@@ -50,19 +50,21 @@ app.post(
   ),
   (req, res) => {
     //Handle validation errors
+    console.log("We recieved a request!");
     const validationErrors = validationResult(req);
     if (!validationErrors.isEmpty()) {
-      return res
-        .status(400)
-        .json({
-          errors: validationErrors.array(),
-          message: "There was a validation error",
-        });
+      console.log("We have a validation error! \n", validationErrors.array());
+      return res.status(400).json({
+        errors: validationErrors.array(),
+        message: "There was a validation error",
+      });
     }
+    console.log("No validation errors, lets continue");
     // Destructure body and check for data protection consent
     const { name, fon, senderAddress, contactMessage, dataProtection } =
       req.body;
     if (!dataProtection) {
+      console.log("Uhhh data protection was not accepted, cannot send message");
       return res
         .status(403)
         .json({ error: "Data Protection must be accepted" });
