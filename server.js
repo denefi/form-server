@@ -123,9 +123,6 @@ app.post(
     });
   }
 );
-app.all("*", (request) => {
-  res.status(404);
-});
 
 // Start the server
 app.listen(port, () => {
