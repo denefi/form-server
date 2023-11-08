@@ -47,3 +47,9 @@ SMTP Password
 `RECEIVER`
 
 The email address to which the contact formular should be forwarded to.
+
+## Test with curl
+
+curl -X POST localhost:3000/mail \
+-H 'Content-Type: application/json' \
+-d '{"name":"test-name","contactMessage":"Test Message", "dataProtection":"true"}'
