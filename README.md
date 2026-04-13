@@ -13,7 +13,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd form-server
 ```
 
 Install dependencies
@@ -26,6 +26,20 @@ Start the server
 
 ```bash
   npm run start
+```
+
+## Run with Docker
+
+Build the image:
+
+```bash
+docker build -t form-server .
+```
+
+Run the container with your `.env` file:
+
+```bash
+docker run --env-file .env -p 3000:3000 form-server
 ```
 
 ## Environment Variables
@@ -50,6 +64,14 @@ The email address to which the contact formular should be forwarded to.
 
 ## Test with curl
 
-curl -X POST localhost:3000/mail \
--H 'Content-Type: application/json' \
--d '{"name":"test-name","contactMessage":"Test Message", "dataProtection":"true"}'
+```bash
+curl -X POST "http://localhost:3000/mail" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test User",
+    "senderAddress": "test@example.com",
+    "fon": "+49123456789",
+    "contactMessage": "Test Message",
+    "dataProtection": true
+  }'
+```

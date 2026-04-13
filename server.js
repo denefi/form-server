@@ -19,8 +19,8 @@ app.use(cors({
   credentials: true
 }));
 
-// Handle preflight requests
-app.options('*', cors());
+// Handle preflight requests (Express 5 requires named wildcard params)
+app.options('/{*any}', cors());
 
 // Middleware to parse JSON bodies
 app.use(express.json());

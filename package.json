@@ -10,10 +10,10 @@
   "author": "denefi",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
-    "express": "^4.21.2",
-    "express-validator": "^7.2.1",
-    "nodemailer": "^6.10.1"
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.2",
+    "nodemailer": "^8.0.5"
   }
 }
