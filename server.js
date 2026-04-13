@@ -4,10 +4,23 @@ const { checkSchema, validationResult } = require("express-validator");
 const cors = require("cors");
 require("dotenv").config();
 
+const email = process.env.EMAIL;
+const password = process.env.PASSWORD;
+const host = process.env.HOST;
+const receiver = process.env.RECEIVER;
+console.log({ receiver })
 const app = express();
 const port = process.env.PORT || 3000; // You can change this port number if needed
-// Enable CORS for all routes
-app.use(cors());
+// Enable CORS for all routes with specific configuration
+app.use(cors({
+  origin: ['https://logopaedie-roseneck.de', 'https://www.logopaedie-roseneck.de', 'https://cms.logopaedie-roseneck.de'],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
+// Handle preflight requests
+app.options('*', cors());
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -71,11 +84,11 @@ app.post(
     }
 
     // Create the transporter with your SMTP settings
-    const email = process.env.EMAIL;
-    const password = process.env.PASSWORD;
+
+    console.log("Creating email transporter with host:", host, "email:", email);
 
     const transporter = nodemailer.createTransport({
-      host: process.env.HOST,
+      host: host,
       port: 465,
       secure: true,
       auth: {
@@ -86,11 +99,11 @@ app.post(
       // Example: service: 'Gmail', auth: { user: 'YOUR_EMAIL', pass: 'YOUR_PASSWORD' }
       // Refer to Nodemailer documentation for more options: https://nodemailer.com/
     });
-    // Compose the email
 
-    const message = `Neue Nachricht ${
-      name ? "von " + name : ", die ohne Namen eingereicht wurde."
-    } 
+
+
+    const message = `Neue Nachricht ${name ? "von " + name : ", die ohne Namen eingereicht wurde."
+      } 
     
     Kontaktdaten:  
     ${fon ? "Telefon: " + fon + "\n" : ""} 
@@ -102,17 +115,23 @@ app.post(
 
     const mailOptions = {
       from: email,
-      to: process.env.RECEIVER,
+      to: receiver,
       subject: name
         ? "New Contact Request from " + name
         : "New Contactrequest from Unknown",
       text: message,
     };
 
-    // Send the email
+    // Send the email with timeout
+    const emailTimeout = setTimeout(() => {
+      console.error("Email sending timed out");
+      res.status(500).json({ error: "Email sending timed out." });
+    }, 30000); // 30 second timeout
+
     transporter.sendMail(mailOptions, (error, info) => {
+      clearTimeout(emailTimeout);
       if (error) {
-        console.error(error);
+        console.error("Email sending error:", error);
         res
           .status(500)
           .json({ error: "An error occurred while sending the email." });
